@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool xmlns="http://www.infotechsoft.com/analysis/schema/tool/definition" name="linux_cat" version="2">
+	<title>Concatenate Files (2)</title>
+	<description>Merges two files into one</description>
+	<inputs>
+		<input name="first-file">
+			<title>File1</title>
+			<required>true</required>
+			<argument index="4"><value/>/*</argument>
+                        <content-type>dir</content-type>
+		</input>
+		<input name="second-file">
+			<title>File2</title>
+			<required>true</required>
+			<argument index="5"><value/></argument>
+		</input>
+	</inputs>		
+	<outputs>
+		<output name="combined-file">
+			<title>Merged Files</title>
+			<description>Output file.</description>
+			<required>true</required>
+			<stdout>true</stdout>
+		</output>
+	</outputs>
+	<parameters>
+		<parameter name="duplicate-files">
+			<title>Repeat filenames as arguments</title>
+			<required>false</required>
+			<argument index="6">${first-file/.*/pdf} ${second-file//.*/}</argument>
+			<datatype>none</datatype>
+		</parameter>
+		<parameter name="count-lines">
+			<title>Count nonblank lines</title>
+			<required>false</required>
+			<argument index="1"> -b </argument>
+			<datatype>none</datatype>
+		</parameter>
+		<parameter name="number-lines">
+			<title>Output lines numbered</title>
+			<required>false</required>
+			<argument index="2"> -n </argument>
+			<datatype>none</datatype>
+		</parameter>
+		<parameter name="squeeze-blank">
+			<title>Squeeze blank lines</title>
+			<required>false</required>
+			<argument index="3"> -s </argument>
+			<datatype>none</datatype>
+		</parameter>
+	</parameters>
+</tool>

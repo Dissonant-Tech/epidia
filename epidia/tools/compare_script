@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool xmlns="http://www.infotechsoft.com/analysis/schema/tool/definition" name="compare_script">
+	<title>Compare files(script)</title>
+	<description>Compare lines common to two sorted files. Three outputs files are produced: One containing the common content of files, one containing unique content(one for each file).
+	</description>
+	<inputs>
+		<input name="first-file">
+			<title>File1</title>
+			<required>true</required>
+			<argument index="1"><value/></argument>
+		</input>
+		<input name="sec-file">
+			<title>File2</title>
+			<required>true</required>
+			<argument index="2"><value/></argument>
+		</input>	
+	</inputs>		
+	<outputs>
+		<output name="common_cont">
+			<title>Common_Content</title>
+			<description>Output File</description>
+			<required>true</required>
+			<filename>Common_Content</filename>
+		</output>
+		<output name="uniq_cont_f1">
+			<title>Unique_Content_File1</title>
+			<description>Output File</description>
+			<required>true</required>
+			<filename>Unique_Content_File1</filename>
+		</output>
+		<output name="uniq_cont_f2">
+			<title>Unique_Content_File2</title>
+			<description>Output File</description>
+			<required>true</required>
+			<filename>Unique_Content_File2</filename>
+		</output>
+	</outputs>
+</tool>

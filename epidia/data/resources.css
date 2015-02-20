@@ -1,0 +1,26 @@
+* {
+    font-family: Arial, San-Serif;
+	font-size: 11px;
+}  
+
+dl {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: black 1px solid;
+}
+dt {
+  clear: left;
+  float: left;
+  width: 150px;
+  text-align: right;
+  margin-right: 5px;
+  font-weight: bold;
+}
+dt::after {
+  content: ":\A0";
+}
+
+dd {
+  float: left;
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tool xmlns="http://www.infotechsoft.com/analysis/schema/tool/definition" name="flirt_registration" namespace="" version="">
+    <title>Flirt Registration</title>
+    <description>Main program that performs affine registration. The main options are: an input (-in) and a reference (-ref) volume; an output volume (-out) where the transform is applied to the input volume to align it with the reference volume.</description>
+    <inputs>
+        <input name="input_image">
+            <title>Input Image</title>
+            <description>The Input Image</description>
+            <required>true</required>
+            <argument index = "2">-in <value/>
+            </argument>
+            <content-type>MRI Image</content-type>
+        </input>
+        <input name="ref_image">
+            <title>Reference Image</title>
+            <description>The Reference Volume</description>
+            <required>true</required>
+            <argument index = "3">-ref</argument>
+            <content-type>MRI Image</content-type>
+        </input>
+    </inputs>
+    <outputs>
+        <output name="output_volume">
+            <title>Output Volume</title>
+            <description>Where the transform is applied to the input volume to align it with the reference volume</description>
+            <required>true</required>
+            <argument index = "4">-out<value/>
+            </argument>
+        </output>
+    </outputs>
+    <parameters>
+        <parameter name="flirt">
+            <title>Flirt</title>
+            <description>Affine Registration</description>
+            <required>true</required>
+            <argument index = "1">fsl5.0-flirt</argument>
+        </parameter>
+    </parameters>
+</tool>
