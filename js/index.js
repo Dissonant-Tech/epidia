@@ -1,3 +1,5 @@
+
+var $toolsElem = $("#tools");
 var toolList = [];
 
 /**
@@ -28,18 +30,55 @@ function parseTool(elem) {
  * @params {Object} toolList - List of tool objects
  */
 function renderTools(list) {
-  var $toolElem = $("#tools");
   var $toolList = $("<ul></ul>");
-  var itemString = '<li><a href="%URL%">%X-Epidia-Tool-Name%</a></li>';
+  var itemString = '<li data-url="%URL%" class="collection-item">%X-Epidia-Tool-Name%</li>';
   $.each(list, function(i, tool){
     var toolItem = itemString.replace(/%[^%]+%/g, function(key){
-      console.log(key);
       return tool[key.slice(1, -1)];
     });
     $toolList.append(toolItem);
   });
-  $toolElem.append($toolList);
+  $toolsElem.append($toolList);
 }
+
+/**
+ * Parsed the description of a tool from it's url
+ *
+ * @params {string} url - url of tool to render
+ * $returns {Object} $xml - Jquery xml object
+ */
+function parseDescription(url) {
+  $.get(url, function(response){
+    var xmlDoc = $.parseXML(response);
+    var $xml = $(xmlDoc);
+    var tool = $xml.find('tool');
+
+    var description = {};
+    $(tool).each(function(index, elem){
+      description.name = elem.getAttribute('name');
+      $(elem).children().each(function(i, el){
+        if (el.childNodes > 0) {
+          
+        } else {
+          description[el.tagName] = $(el).text();
+        }
+      });
+    });
+  });
+}
+
+/**
+ * Adds click listeners to tool elements
+ */
+function addToolListeners() {
+  var $description;
+
+  $toolsElem.find('li').click(function(){
+    var url = this.getAttribute("data-url");
+    description = parseDescription(url);
+  });
+}
+
 
 $.get("epidia/tools/index.html", function(response){
   var html = $.parseHTML(response);
@@ -66,4 +105,5 @@ $.get("epidia/tools/index.html", function(response){
     return 0;
   });
   renderTools(toolList);
+  addToolListeners();
 });
