@@ -47,16 +47,14 @@ function renderTools(list) {
  * @params {string} url - url of tool to render
  * @returns {Object} toolDescription - javascript object of tool description
  */
-var tool;
 function parseToolDescription(url) {
   $.get(url, function(response){
     var xmlDoc = $.parseXML(response);
     var $xml = $(xmlDoc);
-    tool = $xml.find('tool');
+    var tool = $xml.find('tool');
 
     var description = parseDescription(tool);
-    console.log(description);
-    });
+  });
 }
 
 /**
