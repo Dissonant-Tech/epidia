@@ -59,12 +59,22 @@ function parseToolDescription(url) {
     });
 }
 
+/**
+ * Recursively parses the tool xml tag.
+ *
+ * @params {Object} toolXml - xml object of tool tag
+ * @returns {Object} description - javascript object of tool tag
+ */
 function parseDescription(toolXml) {
   var description = {};
 
   $(toolXml).children().each(function(i, elem){
     if (elem.childElementCount > 0) {
-      description[elem.tagName] = parseDescription(elem);
+      if (elem.hasAttribute('name')) {
+        description[elem.getAttribute('name')] = parseDescription(elem);
+      } else {
+        description[elem.tagName] = parseDescription(elem);
+      }
     } else {
       description[elem.tagName] = $(elem).text();
     }
