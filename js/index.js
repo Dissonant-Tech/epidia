@@ -42,6 +42,20 @@ function renderTools(list) {
 }
 
 /**
+ * Render tool descriptions
+ *
+ * @params {Object} description - javascript object of the tool to render
+ */
+function renderDescription(description) {
+  var container = $('#description');
+  var list = $('<ul></ul>');
+
+  for (var key in description) {
+    console.log(key + ", " + description[key]);
+  }
+}
+
+/**
  * Parsed the description of a tool from it's url
  *
  * @params {string} url - url of tool to render
@@ -54,6 +68,7 @@ function parseToolDescription(url) {
     var tool = $xml.find('tool');
 
     var description = parseDescription(tool);
+    renderDescription(description);
   });
 }
 
@@ -65,6 +80,11 @@ function parseToolDescription(url) {
  */
 function parseDescription(toolXml) {
   var description = {};
+
+  // If root element, get tool name
+  if (typeof toolXml[0] != "undefined")  {
+    description.name = toolXml[0].getAttribute('name');
+  }
 
   $(toolXml).children().each(function(i, elem){
     if (elem.childElementCount > 0) {
