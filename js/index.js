@@ -126,6 +126,11 @@ function parseDescription(toolXml) {
   return description;
 }
 
+/**
+ * Provide drag and drop functionality for items in tool list
+ *
+ * @params {Object} ev - event object
+ */
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -139,7 +144,6 @@ function drop(ev) {
   var url = ev.dataTransfer.getData("text");
   description = parseToolDescription(url);
 }
-
 
 $.get("epidia/tools/index.html", function(response){
   var html = $.parseHTML(response);
