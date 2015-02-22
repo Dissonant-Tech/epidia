@@ -14,10 +14,12 @@
       <div id="tools" class="collection"></div>
     </div>
 
-    <div class="description-container col s6">
+    <div class="description-container col s6" ondragover="allowDrop(event)" ondrop="drop(event)">
       <h1>Description</h1>
 
-      <div id="description" class="collection"></div>
+      <div id="description" class="collection">
+        <h1>Drop Here</h1>
+      </div>
     </div>
 
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>

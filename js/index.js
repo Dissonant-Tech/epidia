@@ -31,7 +31,7 @@ function parseTool(elem) {
  */
 function renderTools(list) {
   var $toolList = $("<ul></ul>");
-  var itemString = '<a data-url="%URL%" class="collection-item">%X-Epidia-Tool-Name%</a>';
+  var itemString = '<a data-url="%URL%" draggable="true" ondragstart="drag(event)" class="collection-item">%X-Epidia-Tool-Name%</a>';
   $.each(list, function(i, tool){
     var toolItem = itemString.replace(/%[^%]+%/g, function(key){
       return tool[key.slice(1, -1)];
@@ -60,7 +60,7 @@ function renderDescription(description) {
         var objItem = objectString.replace(/%[^%]+%/g, function(match) {
           if (match == "%KEY%") {
             return key;
-          } 
+          }
         });
         $objList.append(objItem);
         $objList.append(renderDescription(description[key]));
@@ -126,16 +126,18 @@ function parseDescription(toolXml) {
   return description;
 }
 
-/**
- * Adds click listeners to tool elements
- */
-function addToolListeners() {
-  var $description;
+function allowDrop(ev) {
+  ev.preventDefault();
+}
 
-  $toolsElem.find('a').click(function(){
-    var url = this.getAttribute("data-url");
-    description = parseToolDescription(url);
-  });
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.getAttribute('data-url'));
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var url = ev.dataTransfer.getData("text");
+  description = parseToolDescription(url);
 }
 
 
@@ -164,5 +166,4 @@ $.get("epidia/tools/index.html", function(response){
     return 0;
   });
   renderTools(toolList);
-  addToolListeners();
 });
