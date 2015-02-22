@@ -1,0 +1,19 @@
+
+.key {
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-right: 16px;
+}
+
+.obj-list {
+  background-color: #f7f7f7;
+}
+
+.obj-list .key {
+  margin-left: 16px;
+}
+
+.obj-list ul .obj-list {
+  margin-left: 32px;
+  background-color: white;
+}

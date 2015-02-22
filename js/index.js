@@ -1,5 +1,6 @@
 
 var $toolsElem = $("#tools");
+var $descriptionElem = $('#description');
 var toolList = [];
 
 /**
@@ -26,12 +27,11 @@ function parseTool(elem) {
 /**
  * Renders Tool objects in ul element
  *
- * @params {Object} tools - Element with id tools
- * @params {Object} toolList - List of tool objects
+ * @params {Object} list - List of tool objects
  */
 function renderTools(list) {
   var $toolList = $("<ul></ul>");
-  var itemString = '<li data-url="%URL%" class="collection-item">%X-Epidia-Tool-Name%</li>';
+  var itemString = '<a data-url="%URL%" class="collection-item">%X-Epidia-Tool-Name%</a>';
   $.each(list, function(i, tool){
     var toolItem = itemString.replace(/%[^%]+%/g, function(key){
       return tool[key.slice(1, -1)];
@@ -47,12 +47,33 @@ function renderTools(list) {
  * @params {Object} description - javascript object of the tool to render
  */
 function renderDescription(description) {
-  var container = $('#description');
-  var list = $('<ul></ul>');
+  var $list = $('<ul></ul>');
+  var itemString = '<li class="collection-item"><span class="key">%KEY%:</span>%VAL%</li>';
+  var $objList = $('<ul class="obj-list"></ul>');
+  var objectString  = '<div class="object"><span class="key">%KEY%:</span></div>';
 
   for (var key in description) {
-    console.log(key + ", " + description[key]);
+    if ($.isPlainObject(description[key])) {
+      var objItem = objectString.replace(/%[^%]+%/g, function(match) {
+        if (match == "%KEY%") {
+          return key;
+        } 
+      });
+      $objList.append(objItem);
+      $objList.append(renderDescription(description[key]));
+      $list.append($objList);
+    } else {
+      var item = itemString.replace(/%[^%]+%/g, function(match) {
+        if (match == "%KEY%") {
+          return key;
+        } else {
+          return description[key];
+        }
+      });
+      $list.append(item);
+    }
   }
+  return $list;
 }
 
 /**
@@ -68,7 +89,8 @@ function parseToolDescription(url) {
     var tool = $xml.find('tool');
 
     var description = parseDescription(tool);
-    renderDescription(description);
+    $descriptionElem.empty();
+    $descriptionElem.append(renderDescription(description));
   });
 }
 
@@ -106,7 +128,7 @@ function parseDescription(toolXml) {
 function addToolListeners() {
   var $description;
 
-  $toolsElem.find('li').click(function(){
+  $toolsElem.find('a').click(function(){
     var url = this.getAttribute("data-url");
     description = parseToolDescription(url);
   });
