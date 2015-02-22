@@ -6,14 +6,22 @@
 }
 
 .obj-list {
-  background-color: #f7f7f7;
+  background-color: #f9f9f9;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .obj-list .key {
-  margin-left: 16px;
+  padding-left: 16px;
+}
+
+.obj-list .object {
+  border-bottom: 2px solid black;
 }
 
 .obj-list ul .obj-list {
-  margin-left: 32px;
+  padding-left: 32px;
   background-color: white;
+  border-bottom: none;
 }
+

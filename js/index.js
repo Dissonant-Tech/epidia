@@ -54,14 +54,18 @@ function renderDescription(description) {
 
   for (var key in description) {
     if ($.isPlainObject(description[key])) {
-      var objItem = objectString.replace(/%[^%]+%/g, function(match) {
-        if (match == "%KEY%") {
-          return key;
-        } 
-      });
-      $objList.append(objItem);
-      $objList.append(renderDescription(description[key]));
-      $list.append($objList);
+      if (key == "argument") {
+        continue;
+      } else {
+        var objItem = objectString.replace(/%[^%]+%/g, function(match) {
+          if (match == "%KEY%") {
+            return key;
+          } 
+        });
+        $objList.append(objItem);
+        $objList.append(renderDescription(description[key]));
+        $list.append($objList);
+      }
     } else {
       var item = itemString.replace(/%[^%]+%/g, function(match) {
         if (match == "%KEY%") {
