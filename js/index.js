@@ -45,26 +45,31 @@ function renderTools(list) {
  * Parsed the description of a tool from it's url
  *
  * @params {string} url - url of tool to render
- * $returns {Object} $xml - Jquery xml object
+ * $returns {Object} toolDescription - javascript object of tool description
  */
-function parseDescription(url) {
+var tool;
+function parseToolDescription(url) {
   $.get(url, function(response){
     var xmlDoc = $.parseXML(response);
     var $xml = $(xmlDoc);
-    var tool = $xml.find('tool');
+    tool = $xml.find('tool');
 
-    var description = {};
-    $(tool).each(function(index, elem){
-      description.name = elem.getAttribute('name');
-      $(elem).children().each(function(i, el){
-        if (el.childNodes > 0) {
-          
-        } else {
-          description[el.tagName] = $(el).text();
-        }
-      });
+    var description = parseDescription(tool);
+    console.log(description);
     });
+}
+
+function parseDescription(toolXml) {
+  var description = {};
+
+  $(toolXml).children().each(function(i, elem){
+    if (elem.childElementCount > 0) {
+      description[elem.tagName] = parseDescription(elem);
+    } else {
+      description[elem.tagName] = $(elem).text();
+    }
   });
+  return description;
 }
 
 /**
@@ -75,7 +80,7 @@ function addToolListeners() {
 
   $toolsElem.find('li').click(function(){
     var url = this.getAttribute("data-url");
-    description = parseDescription(url);
+    description = parseToolDescription(url);
   });
 }
 
