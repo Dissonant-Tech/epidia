@@ -45,7 +45,7 @@ function renderTools(list) {
  * Parsed the description of a tool from it's url
  *
  * @params {string} url - url of tool to render
- * $returns {Object} toolDescription - javascript object of tool description
+ * @returns {Object} toolDescription - javascript object of tool description
  */
 var tool;
 function parseToolDescription(url) {
