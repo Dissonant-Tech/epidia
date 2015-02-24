@@ -4,6 +4,16 @@ var $descriptionElem = $('#description');
 
 var toolList = [];
 
+
+function stringReplace(baseStr, reDict) {
+    var resultStr = baseStr.replace(/%[^%]+%/g, function(match){
+        if (reDict.hasOwnProperty(match)) {
+            return reDict[match];
+        }
+    });
+    return resultStr;
+}
+
 /**
  * Parses tool element
  *
@@ -62,13 +72,7 @@ function renderDescriptionHead(url) {
     var submitString = '<button class="btn waves-effect waves-light" type="submit" value="submit">Save<i class="mdi-content-save right"></i></button>';
 
     for (var key in currTool) {
-        var item = itemString.replace(/%[^%]+%/g, function(match) {
-            if (match == "%KEY%") {
-                return key;
-            } else {
-                return currTool[key];
-            }
-        });
+        var item = stringReplace(itemString, {'%KEY%': key, '%VAL%': currTool[key]});
         $header.append(item);
     }
     $header.append(submitString);
@@ -91,23 +95,13 @@ function renderDescription(description) {
             if (key == "argument") {
                 continue;
             } else {
-                var objItem = objectString.replace(/%[^%]+%/g, function(match) {
-                    if (match == "%KEY%") {
-                        return key;
-                    }
-                });
+                var objItem = stringReplace(objectString, {'%KEY%': key});
                 $objList.append(objItem);
                 $objList.append(renderDescription(description[key]));
                 $list.append($objList);
             }
         } else {
-            var item = itemString.replace(/%[^%]+%/g, function(match) {
-                if (match == "%KEY%") {
-                    return key;
-                } else {
-                    return description[key];
-                }
-            });
+            var item = stringReplace(itemString, {'%KEY%': key, '%VAL%': description[key]});
             $list.append(item);
         }
     }
