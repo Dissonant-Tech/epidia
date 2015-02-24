@@ -1,4 +1,7 @@
 
+body {
+  background-color: #f7f7f7;
+}
 .key {
   text-transform: uppercase;
   font-weight: bold;

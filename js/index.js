@@ -59,6 +59,7 @@ function renderToolList(list) {
         var toolItem = stringReplace(itemString, tool);
         $toolList.append(toolItem);
     });
+    $toolsElem.empty();
     $toolsElem.append($toolList);
 }
 
