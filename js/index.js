@@ -59,6 +59,7 @@ function renderToolList(list) {
         var toolItem = stringReplace(itemString, tool);
         $toolList.append(toolItem);
     });
+    $toolsElem.empty();
     $toolsElem.append($toolList);
 }
 
@@ -77,11 +78,20 @@ function renderDescriptionHead(url) {
     });
 
     $header = $('<form class="description-header container"></form>');
-    var itemString = '<div class="" row><label for="%VAL%">%KEY%:</label><textarea id="%KEY%" class="materialize-textarea" name="%KEY%">%VAL%</textarea></div>';
+    var itemStr = '<div class="" row><label for="%KEY%">%KEY%:</label><input type="text" id="%KEY%" class="materialize-textarea" name="%VAL%" value="%VAL%"></div>';
+    var longItemStr = '<div class="" row><label for="%KEY%">%KEY%:</label><textarea id="%KEY%" class="materialize-textarea" name="%KEY%">%VAL%</textarea></div>';
     var submitString = '<button class="btn waves-effect waves-light" type="submit" value="submit">Save<i class="mdi-content-save right"></i></button>';
 
     for (var key in currTool) {
-        var item = stringReplace(itemString, {'%KEY%': key, '%VAL%': currTool[key]});
+        var item = '';
+
+        // If text is long use text area
+        if (currTool[key].length > 30) {
+            item = stringReplace(longItemStr, {'%KEY%': key, '%VAL%': currTool[key]});
+        } else {
+            item = stringReplace(itemStr, {'%KEY%': key, '%VAL%': currTool[key]});
+            
+        }
         $header.append(item);
     }
     $header.append(submitString);
