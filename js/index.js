@@ -50,7 +50,7 @@ function renderDescriptionHead(url) {
     });
 
     $header = $('<form class="description-header container"></form>');
-    var itemString = '<div class="" row><label for="%VAL%">%KEY%</label><input id="%KEY%" type="text" name="%KEY%" value="%VAL%"></div>';
+    var itemString = '<div class="" row><label for="%VAL%">%KEY%:</label><textarea id="%KEY%" class="materialize-textarea" name="%KEY%">%VAL%</textarea></div>';
     var submitString = '<button class="btn waves-effect waves-light" type="submit" value="submit">Save<i class="mdi-content-save right"></i></button>';
 
     for (var key in currTool) {
