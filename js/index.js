@@ -7,7 +7,10 @@ var toolList = [];
 /**
  * Replaces substrings in baseStr using they keys in reDict with
  * the key's value. Searches for words surrounded by percentage sings
- * (i.e. '%WORD%') and replaces it with the value reDict['%WORD%']
+ * (i.e. '%WORD%') and replaces it with the value reDict['%WORD%'].
+ *
+ * Failing finding '%WORD%', stringReplace will then check if 'WORD' is
+ * a key in reDict and if so, use that instead.
  *
  * @params {String} baseStr - The string to operate on
  * @returns {String} resultStr - The string that has been operated on
@@ -16,6 +19,8 @@ function stringReplace(baseStr, reDict) {
     var resultStr = baseStr.replace(/%[^%]+%/g, function(match){
         if (reDict.hasOwnProperty(match)) {
             return reDict[match];
+        } else if (reDict.hasOwnProperty(match.slice(1, -1))) {
+            return reDict[match.slice(1, -1)];
         }
     });
     return resultStr;
@@ -51,9 +56,7 @@ function renderToolList(list) {
     var $toolList = $("<ul></ul>");
     var itemString = '<a data-url="%URL%" draggable="true" ondragstart="drag(event)" class="collection-item">%X-Epidia-Tool-Name%</a>';
     $.each(list, function(i, tool){
-        var toolItem = itemString.replace(/%[^%]+%/g, function(key){
-            return tool[key.slice(1, -1)];
-        });
+        var toolItem = stringReplace(itemString, tool);
         $toolList.append(toolItem);
     });
     $toolsElem.append($toolList);
