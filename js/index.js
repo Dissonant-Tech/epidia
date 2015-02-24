@@ -4,7 +4,14 @@ var $descriptionElem = $('#description');
 
 var toolList = [];
 
-
+/**
+ * Replaces substrings in baseStr using they keys in reDict with
+ * the key's value. Searches for words surrounded by percentage sings
+ * (i.e. '%WORD%') and replaces it with the value reDict['%WORD%']
+ *
+ * @params {String} baseStr - The string to operate on
+ * @returns {String} resultStr - The string that has been operated on
+ */
 function stringReplace(baseStr, reDict) {
     var resultStr = baseStr.replace(/%[^%]+%/g, function(match){
         if (reDict.hasOwnProperty(match)) {
@@ -56,7 +63,6 @@ function renderToolList(list) {
  * Renders tool description header. A form that allows editing of values
  *
  * @params {String} url - the url of the tool to render. used as an identifier.
- *
  * @returns {Object} $header - jQuery object of elements
  */
 function renderDescriptionHead(url) {
@@ -186,7 +192,6 @@ function drop(ev) {
  * Appends tools to global variable toolList
  *
  * @params {Object} html - $.get() response parsed to html
- *
  */
 function parseToolList(html) {
     //NOTE: Could also match tags whos tagname is 'dt',
