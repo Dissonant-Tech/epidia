@@ -1,6 +1,7 @@
 
 var $toolsElem = $("#tools");
 var $descriptionElem = $('#description');
+
 var toolList = [];
 
 /**
@@ -29,7 +30,7 @@ function parseTool(elem) {
  *
  * @params {Object} list - List of tool objects
  */
-function renderTools(list) {
+function renderToolList(list) {
     var $toolList = $("<ul></ul>");
     var itemString = '<a data-url="%URL%" draggable="true" ondragstart="drag(event)" class="collection-item">%X-Epidia-Tool-Name%</a>';
     $.each(list, function(i, tool){
@@ -179,9 +180,7 @@ function drop(ev) {
     description = parseToolDescription(url);
 }
 
-$.get("epidia/tools/index.html", function(response){
-    var html = $.parseHTML(response);
-
+function parseToolList(html) {
     //NOTE: Could also match tags whos tagname is 'dt',
     $.each(html, function(i, el) {
         // Only need elements with an ID
@@ -193,6 +192,11 @@ $.get("epidia/tools/index.html", function(response){
             }
         }
     });
+}
+
+function setupTools(html) {
+    parseToolList(html);
+
     // Sort by X-Epidia-Tool-Name
     toolList.sort(function(a, b) {
         if (a["X-Epidia-Tool-Name"] < b["X-Epidia-Tool-Name"]) {
@@ -203,5 +207,16 @@ $.get("epidia/tools/index.html", function(response){
         }
         return 0;
     });
-    renderTools(toolList);
+    renderToolList(toolList);
+}
+
+/**
+ * Script starts here.
+ *
+ * This funciton uses an async call to retrieve tool data and sets off
+ * the rest of the script.
+ */
+$.get("epidia/tools/index.html", function(response){
+    var html = $.parseHTML(response);
+    setupTools(html);
 });
