@@ -42,6 +42,13 @@ function renderToolList(list) {
     $toolsElem.append($toolList);
 }
 
+/**
+ * Renders tool description header. A form that allows editing of values
+ *
+ * @params {String} url - the url of the tool to render. used as an identifier.
+ *
+ * @returns {Object} $header - jQuery object of elements
+ */
 function renderDescriptionHead(url) {
     var currTool;
     $.each(toolList, function(i, obj){
@@ -180,6 +187,13 @@ function drop(ev) {
     description = parseToolDescription(url);
 }
 
+/**
+ * Iterates over html tool elements and parses each tool.
+ * Appends tools to global variable toolList
+ *
+ * @params {Object} html - $.get() response parsed to html
+ *
+ */
 function parseToolList(html) {
     //NOTE: Could also match tags whos tagname is 'dt',
     $.each(html, function(i, el) {
@@ -194,6 +208,11 @@ function parseToolList(html) {
     });
 }
 
+/**
+ * Parse, sort and render the tools
+ *
+ * @params {Object} html - parsed html 
+ */
 function setupTools(html) {
     parseToolList(html);
 
