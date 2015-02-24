@@ -41,6 +41,32 @@ function renderTools(list) {
     $toolsElem.append($toolList);
 }
 
+function renderDescriptionHead(url) {
+    var currTool;
+    $.each(toolList, function(i, obj){
+        if (obj.URL == url) {
+            currTool = obj;
+        }
+    });
+
+    $header = $('<form class="description-header container"></form>');
+    var itemString = '<div class="" row><label for="%VAL%">%KEY%</label><input id="%KEY%" type="text" name="%KEY%" value="%VAL%"></div>';
+    var submitString = '<button class="btn waves-effect waves-light" type="submit" value="submit">Save<i class="mdi-content-save right"></i></button>';
+
+    for (var key in currTool) {
+        var item = itemString.replace(/%[^%]+%/g, function(match) {
+            if (match == "%KEY%") {
+                return key;
+            } else {
+                return currTool[key];
+            }
+        });
+        $header.append(item);
+    }
+    $header.append(submitString);
+    return $header;
+}
+
 /**
  * Render tool descriptions
  *
@@ -94,8 +120,15 @@ function parseToolDescription(url) {
 
         var description = parseDescription(tool);
         $descriptionElem.empty();
+        $descriptionElem.append(renderDescriptionHead(url));
         $descriptionElem.append(renderDescription(description));
+        $('.description-header').submit(onFormSubmit);
     });
+}
+
+function onFormSubmit() {
+    console.log($descriptionElem.find('.description-header'));
+    return false;
 }
 
 /**
@@ -142,6 +175,7 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var url = ev.dataTransfer.getData("text");
+
     description = parseToolDescription(url);
 }
 
