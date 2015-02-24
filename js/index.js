@@ -1,7 +1,30 @@
 
 var $toolsElem = $("#tools");
 var $descriptionElem = $('#description');
+
 var toolList = [];
+
+/**
+ * Replaces substrings in baseStr using they keys in reDict with
+ * the key's value. Searches for words surrounded by percentage sings
+ * (i.e. '%WORD%') and replaces it with the value reDict['%WORD%'].
+ *
+ * Failing finding '%WORD%', stringReplace will then check if 'WORD' is
+ * a key in reDict and if so, use that instead.
+ *
+ * @params {String} baseStr - The string to operate on
+ * @returns {String} resultStr - The string that has been operated on
+ */
+function stringReplace(baseStr, reDict) {
+    var resultStr = baseStr.replace(/%[^%]+%/g, function(match){
+        if (reDict.hasOwnProperty(match)) {
+            return reDict[match];
+        } else if (reDict.hasOwnProperty(match.slice(1, -1))) {
+            return reDict[match.slice(1, -1)];
+        }
+    });
+    return resultStr;
+}
 
 /**
  * Parses tool element
@@ -29,18 +52,22 @@ function parseTool(elem) {
  *
  * @params {Object} list - List of tool objects
  */
-function renderTools(list) {
+function renderToolList(list) {
     var $toolList = $("<ul></ul>");
     var itemString = '<a data-url="%URL%" draggable="true" ondragstart="drag(event)" class="collection-item">%X-Epidia-Tool-Name%</a>';
     $.each(list, function(i, tool){
-        var toolItem = itemString.replace(/%[^%]+%/g, function(key){
-            return tool[key.slice(1, -1)];
-        });
+        var toolItem = stringReplace(itemString, tool);
         $toolList.append(toolItem);
     });
     $toolsElem.append($toolList);
 }
 
+/**
+ * Renders tool description header. A form that allows editing of values
+ *
+ * @params {String} url - the url of the tool to render. used as an identifier.
+ * @returns {Object} $header - jQuery object of elements
+ */
 function renderDescriptionHead(url) {
     var currTool;
     $.each(toolList, function(i, obj){
@@ -54,13 +81,7 @@ function renderDescriptionHead(url) {
     var submitString = '<button class="btn waves-effect waves-light" type="submit" value="submit">Save<i class="mdi-content-save right"></i></button>';
 
     for (var key in currTool) {
-        var item = itemString.replace(/%[^%]+%/g, function(match) {
-            if (match == "%KEY%") {
-                return key;
-            } else {
-                return currTool[key];
-            }
-        });
+        var item = stringReplace(itemString, {'%KEY%': key, '%VAL%': currTool[key]});
         $header.append(item);
     }
     $header.append(submitString);
@@ -83,23 +104,13 @@ function renderDescription(description) {
             if (key == "argument") {
                 continue;
             } else {
-                var objItem = objectString.replace(/%[^%]+%/g, function(match) {
-                    if (match == "%KEY%") {
-                        return key;
-                    }
-                });
+                var objItem = stringReplace(objectString, {'%KEY%': key});
                 $objList.append(objItem);
                 $objList.append(renderDescription(description[key]));
                 $list.append($objList);
             }
         } else {
-            var item = itemString.replace(/%[^%]+%/g, function(match) {
-                if (match == "%KEY%") {
-                    return key;
-                } else {
-                    return description[key];
-                }
-            });
+            var item = stringReplace(itemString, {'%KEY%': key, '%VAL%': description[key]});
             $list.append(item);
         }
     }
@@ -179,9 +190,13 @@ function drop(ev) {
     description = parseToolDescription(url);
 }
 
-$.get("epidia/tools/index.html", function(response){
-    var html = $.parseHTML(response);
-
+/**
+ * Iterates over html tool elements and parses each tool.
+ * Appends tools to global variable toolList
+ *
+ * @params {Object} html - $.get() response parsed to html
+ */
+function parseToolList(html) {
     //NOTE: Could also match tags whos tagname is 'dt',
     $.each(html, function(i, el) {
         // Only need elements with an ID
@@ -193,6 +208,16 @@ $.get("epidia/tools/index.html", function(response){
             }
         }
     });
+}
+
+/**
+ * Parse, sort and render the tools
+ *
+ * @params {Object} html - parsed html 
+ */
+function setupTools(html) {
+    parseToolList(html);
+
     // Sort by X-Epidia-Tool-Name
     toolList.sort(function(a, b) {
         if (a["X-Epidia-Tool-Name"] < b["X-Epidia-Tool-Name"]) {
@@ -203,5 +228,16 @@ $.get("epidia/tools/index.html", function(response){
         }
         return 0;
     });
-    renderTools(toolList);
+    renderToolList(toolList);
+}
+
+/**
+ * Script starts here.
+ *
+ * This funciton uses an async call to retrieve tool data and sets off
+ * the rest of the script.
+ */
+$.get("epidia/tools/index.html", function(response){
+    var html = $.parseHTML(response);
+    setupTools(html);
 });
